@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { margin: 5px; padding: 10px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>API功能测试</h1>
+    
+    <div class="test-section">
+        <h3>0. 创建测试外链</h3>
+        <button onclick="createTestLinks()">创建测试外链</button>
+        <div id="result0" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>1. 测试获取外链列表</h3>
+        <button onclick="testGetLinks()">获取外链列表</button>
+        <div id="result1" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. 测试全部检测API</h3>
+        <button onclick="testBatchCheckAll()">全部检测</button>
+        <div id="result2" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. 测试批量检测API</h3>
+        <button onclick="testBatchCheckSelected()">批量检测(指定ID)</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080';
+        
+        async function makeRequest(url, options = {}) {
+            try {
+                console.log('请求URL:', url);
+                console.log('请求选项:', options);
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                console.log('响应状态:', response.status);
+                console.log('响应头:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('响应数据:', data);
+                
+                return { success: true, data };
+            } catch (error) {
+                console.error('请求错误:', error);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        async function testGetLinks() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.innerHTML = '正在测试获取外链列表...';
+            
+            const result = await makeRequest(`${API_BASE}/api/external-links`);
+            
+            if (result.success) {
+                const count = result.data.data ? result.data.data.length : 0;
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ 成功获取外链列表，共 ${count} 条记录<br><pre>${JSON.stringify(result.data, null, 2)}</pre>`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ 获取外链列表失败: ${result.error}`;
+            }
+        }
+        
+        async function testBatchCheckAll() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.innerHTML = '正在测试全部检测API...';
+            
+            const result = await makeRequest(`${API_BASE}/api/external-links/batch-check`, {
+                method: 'POST',
+                body: JSON.stringify({ ids: [], all: true })
+            });
+            
+            if (result.success) {
+                const results = result.data.results || [];
+                const total = results.length;
+                const valid = results.filter(r => r.is_valid).length;
+                const invalid = results.filter(r => !r.is_valid).length;
+                
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ 全部检测成功！<br>
+                    总计: ${total} 个<br>
+                    可用: ${valid} 个<br>
+                    不可用: ${invalid} 个<br>
+                    <pre>${JSON.stringify(result.data, null, 2)}</pre>`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ 全部检测失败: ${result.error}`;
+            }
+        }
+        
+        async function testBatchCheckSelected() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.innerHTML = '正在测试批量检测API...';
+            
+            // 先获取一些链接ID
+            const linksResult = await makeRequest(`${API_BASE}/api/external-links`);
+            if (!linksResult.success) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ 无法获取链接列表: ${linksResult.error}`;
+                return;
+            }
+            
+            const links = linksResult.data.data || [];
+            if (links.length === 0) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ 没有链接可供测试`;
+                return;
+            }
+            
+            // 取前2个链接进行测试
+            const testIds = links.slice(0, 2).map(link => link.id);
+            console.log('测试IDs:', testIds);
+            
+            const result = await makeRequest(`${API_BASE}/api/external-links/batch-check`, {
+                method: 'POST',
+                body: JSON.stringify({ ids: testIds, all: false })
+            });
+            
+            if (result.success) {
+                const results = result.data.results || [];
+                const total = results.length;
+                const valid = results.filter(r => r.is_valid).length;
+                const invalid = results.filter(r => !r.is_valid).length;
+                
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ 批量检测成功！<br>
+                    检测ID: ${testIds.join(', ')}<br>
+                    总计: ${total} 个<br>
+                    可用: ${valid} 个<br>
+                    不可用: ${invalid} 个<br>
+                    <pre>${JSON.stringify(result.data, null, 2)}</pre>`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ 批量检测失败: ${result.error}`;
+            }
+        }
+        
+        // 页面加载时自动测试
+        window.onload = function() {
+            console.log('开始自动测试...');
+            testGetLinks();
+        };
+        
+        async function createTestLinks() {
+            const resultDiv = document.getElementById('result0');
+            resultDiv.innerHTML = '正在创建测试外链...';
+            
+            const testLinks = [
+                { url: 'https://www.baidu.com', category: '测试链接', description: '百度首页' },
+                { url: 'https://www.google.com', category: '测试链接', description: '谷歌首页' },
+                { url: 'https://github.com', category: '测试链接', description: 'GitHub' },
+                { url: 'https://invalid-domain-test-12345.com', category: '测试链接', description: '无效链接测试' }
+            ];
+            
+            let successCount = 0;
+            let failCount = 0;
+            
+            for (const linkData of testLinks) {
+                try {
+                    const result = await makeRequest(`${API_BASE}/api/external-links`, {
+                        method: 'POST',
+                        body: JSON.stringify(linkData)
+                    });
+                    
+                    if (result.success) {
+                        successCount++;
+                        console.log('创建链接成功:', linkData.url);
+                    } else {
+                        failCount++;
+                        console.log('创建链接失败:', linkData.url, result.error);
+                    }
+                } catch (error) {
+                    failCount++;
+                    console.error('创建链接异常:', linkData.url, error);
+                }
+            }
+            
+            if (successCount > 0) {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `✅ 创建测试链接完成！成功: ${successCount} 个，失败: ${failCount} 个`;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `❌ 创建测试链接失败！成功: ${successCount} 个，失败: ${failCount} 个`;
+            }
+        }
+    </script>
+</body>
+</html> 

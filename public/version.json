@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "buildTime": "2024-03-20T12:00:00Z",
+  "changelog": "1. 新增功能A\n2. 优化功能B\n3. 修复问题C",
+  "files": {
+    "js": [
+      "/static/js/app.js",
+      "/static/js/vendor.js"
+    ],
+    "css": [
+      "/static/css/app.css"
+    ]
+  }
+} 

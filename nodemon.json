@@ -1,0 +1,5 @@
+{
+    "watch": ["src/plugins"],
+    "ext": "ts,js,vue,json",
+    "exec": "npm run dev"
+  }

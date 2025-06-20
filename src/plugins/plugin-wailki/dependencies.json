@@ -1,0 +1,149 @@
+{
+  "plugin_key": "wailki",
+  "database": {
+    "type": "mongodb",
+    "database_name": "plugin_external_links",
+    "required": true,
+    "collections": [
+      {
+        "name": "external_links",
+        "description": "外链数据表",
+        "indexes": [
+          {
+            "name": "url_index",
+            "fields": {
+              "url": 1
+            },
+            "unique": true
+          },
+          {
+            "name": "created_at_index",
+            "fields": {
+              "created_at": -1
+            }
+          },
+          {
+            "name": "status_index",
+            "fields": {
+              "status": 1
+            }
+          }
+        ],
+        "schema": {
+          "_id": "ObjectId",
+          "title": "string",
+          "url": "string",
+          "description": "string",
+          "category": "string",
+          "tags": "array",
+          "clicks": "number",
+          "status": "string",
+          "last_check": "date",
+          "created_at": "date",
+          "updated_at": "date"
+        }
+      },
+      {
+        "name": "link_stats",
+        "description": "外链统计数据表",
+        "indexes": [
+          {
+            "name": "link_id_index",
+            "fields": {
+              "link_id": 1
+            }
+          },
+          {
+            "name": "date_index",
+            "fields": {
+              "date": -1
+            }
+          }
+        ],
+        "schema": {
+          "_id": "ObjectId",
+          "link_id": "ObjectId",
+          "date": "date",
+          "clicks": "number",
+          "views": "number",
+          "referrers": "object"
+        }
+      }
+    ]
+  },
+  "services": [
+    {
+      "name": "mongodb",
+      "type": "database",
+      "host": "localhost",
+      "port": 27017,
+      "required": true,
+      "description": "MongoDB数据库服务"
+    }
+  ],
+  "environment": [
+    {
+      "name": "MONGODB_URI",
+      "required": true,
+      "type": "url",
+      "description": "MongoDB连接字符串",
+      "default": "mongodb://localhost:27017"
+    },
+    {
+      "name": "NODE_ENV",
+      "required": false,
+      "type": "string",
+      "description": "运行环境",
+      "default": "development"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "go.mongodb.org/mongo-driver",
+      "version": ">=1.10.0",
+      "type": "go_module",
+      "required": true,
+      "description": "MongoDB Go驱动程序"
+    },
+    {
+      "name": "vue",
+      "version": ">=3.0.0",
+      "type": "npm_package",
+      "required": true,
+      "description": "Vue.js前端框架"
+    },
+    {
+      "name": "element-plus",
+      "version": ">=2.0.0",
+      "type": "npm_package",
+      "required": true,
+      "description": "Element Plus UI组件库"
+    }
+  ],
+  "permissions": [
+    {
+      "name": "plugin_wailki_access",
+      "type": "read",
+      "resource": "plugin_wailki",
+      "description": "访问外链插件"
+    },
+    {
+      "name": "plugin_wailki_index_access",
+      "type": "read",
+      "resource": "plugin_wailki_index",
+      "description": "查看外链列表"
+    },
+    {
+      "name": "plugin_wailki_publish_access",
+      "type": "write",
+      "resource": "plugin_wailki_publish",
+      "description": "发布外链"
+    },
+    {
+      "name": "plugin_wailki_stats_access",
+      "type": "read",
+      "resource": "plugin_wailki_stats",
+      "description": "查看外链统计"
+    }
+  ]
+} 

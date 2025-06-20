@@ -1,0 +1,5480 @@
+basePath: /
+definitions:
+  auth.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+      msg:
+        type: string
+    type: object
+  auth.ForgotPasswordRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  auth.ForgotPasswordResponse:
+    properties:
+      msg:
+        type: string
+    type: object
+  auth.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  auth.LogoutResponse:
+    properties:
+      success:
+        type: boolean
+    type: object
+  auth.ProfileResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  auth.RefreshTokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  auth.RegisterResponse:
+    properties:
+      username:
+        type: string
+    type: object
+  auth.ResetPasswordRequest:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - code
+    - email
+    - password
+    type: object
+  auth.ResetPasswordResponse:
+    properties:
+      msg:
+        type: string
+    type: object
+  handler.BatchCardRequest:
+    description: 批量操作卡密的请求体
+    properties:
+      ids:
+        example:
+        - 1
+        items:
+          type: integer
+        type: array
+      reason:
+        example: 批量操作原因
+        type: string
+    required:
+    - ids
+    type: object
+  handler.BatchPluginActionRequest:
+    type: object
+  handler.BatchPluginActionResult:
+    properties:
+      id:
+        example: 1
+        type: integer
+      reason:
+        example: 失败原因
+        type: string
+      result:
+        example: success
+        type: string
+    type: object
+  handler.ChangePointsRequest:
+    description: 积分变动参数
+    properties:
+      link_id:
+        type: integer
+      plugin_id:
+        type: integer
+      points:
+        type: integer
+      reason:
+        type: string
+      reward_type:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - points
+    - reward_type
+    - user_id
+    type: object
+  handler.CreateBatchRequest:
+    properties:
+      creator:
+        example: 10001
+        type: integer
+      desc:
+        example: 年度VIP批次
+        type: string
+      ext:
+        example: '{}'
+        type: string
+      name:
+        example: 2024年VIP批次
+        type: string
+      prefix:
+        example: VIP2024
+        type: string
+    required:
+    - prefix
+    type: object
+  handler.ErrorResponse:
+    properties:
+      error:
+        example: 参数错误
+        type: string
+    type: object
+  handler.GenerateCardsRequest:
+    properties:
+      batch_id:
+        example: 1
+        type: integer
+      count:
+        example: 10
+        type: integer
+      group_tag:
+        example: groupA
+        type: string
+      plugin_type:
+        example: external_link
+        type: string
+      prefix:
+        example: VIP
+        type: string
+      valid_period:
+        example: 90
+        type: integer
+      valid_until:
+        example: "2024-12-31"
+        type: string
+    required:
+    - count
+    - plugin_type
+    type: object
+  handler.GenerateCardsResponse:
+    properties:
+      cards:
+        example:
+        - '["VIP123456"'
+        - '"VIP123457"]'
+        items:
+          type: string
+        type: array
+      success:
+        example: true
+        type: boolean
+    type: object
+  handler.HandlerPluginCard:
+    properties:
+      code:
+        example: VIP123456
+        type: string
+      id:
+        example: 1
+        type: integer
+      plugin_type:
+        example: external_link
+        type: string
+      status:
+        example: active
+        type: string
+    type: object
+  handler.ListBindRecordsResponse:
+    properties:
+      list:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      total:
+        example: 100
+        type: integer
+    type: object
+  handler.ListCardsResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/handler.HandlerPluginCard'
+        type: array
+      total:
+        example: 100
+        type: integer
+    type: object
+  handler.PluginStatusRequest:
+    properties:
+      status:
+        enum:
+        - enable
+        - disable
+        - online
+        - offline
+        example: enable
+        type: string
+    required:
+    - status
+    type: object
+  handler.ReasonRequest:
+    properties:
+      reason:
+        example: 原因
+        type: string
+    type: object
+  handler.SuccessResponse:
+    properties:
+      success:
+        example: true
+        type: boolean
+    type: object
+  handler.VerifyCardRequest:
+    properties:
+      client_id:
+        example: 10001
+        type: integer
+      code:
+        example: VIP123456
+        type: string
+      plugin_type:
+        example: external_link
+        type: string
+      server_id:
+        example: srv-001
+        type: string
+    required:
+    - client_id
+    - code
+    - plugin_type
+    - server_id
+    type: object
+  handler.VerifyCardResponse:
+    properties:
+      card:
+        $ref: '#/definitions/handler.HandlerPluginCard'
+      success:
+        example: true
+        type: boolean
+    type: object
+  model.ActiveUser:
+    properties:
+      lastLogin:
+        type: integer
+      name:
+        type: string
+      roles:
+        description: 由多对多表查出
+        items:
+          type: string
+        type: array
+    type: object
+  model.BatchAssignPermissionsRequest:
+    description: 批量为角色分配权限请求体
+    properties:
+      permission_ids:
+        items:
+          type: integer
+        minItems: 1
+        type: array
+    required:
+    - permission_ids
+    type: object
+  model.BatchAssignRolesRequest:
+    description: 批量为用户分配角色请求体
+    properties:
+      role_ids:
+        items:
+          type: integer
+        minItems: 1
+        type: array
+    required:
+    - role_ids
+    type: object
+  model.BatchDeletePluginsRequest:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - ids
+    type: object
+  model.BatchRemovePermissionsRequest:
+    description: 批量为角色移除权限请求体
+    properties:
+      permission_ids:
+        items:
+          type: integer
+        minItems: 1
+        type: array
+    required:
+    - permission_ids
+    type: object
+  model.BatchRemoveRolesRequest:
+    description: 批量为用户移除角色请求体
+    properties:
+      role_ids:
+        items:
+          type: integer
+        minItems: 1
+        type: array
+    required:
+    - role_ids
+    type: object
+  model.Category:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: AI工具
+        type: string
+    required:
+    - name
+    type: object
+  model.CommentRequest:
+    properties:
+      content:
+        type: string
+      type:
+        type: string
+    required:
+    - content
+    type: object
+  model.CommonResponse:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+    type: object
+  model.CreatePluginRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      developer:
+        type: string
+      name:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      version:
+        type: string
+    required:
+    - developer
+    - name
+    - version
+    type: object
+  model.CreatePluginResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        properties:
+          id:
+            type: integer
+        type: object
+      msg:
+        type: string
+    type: object
+  model.EditPluginRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      developer:
+        type: string
+      name:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      version:
+        type: string
+    required:
+    - developer
+    - name
+    - version
+    type: object
+  model.EditPluginResponse:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+    type: object
+  model.EmailNotification:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      sent_at:
+        type: string
+      status:
+        description: 0:待发送,1:已发送,2:发送失败
+        type: integer
+      subject:
+        type: string
+      type:
+        description: 通知类型
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.ExecuteRequest:
+    properties:
+      action:
+        type: string
+      params:
+        additionalProperties: true
+        type: object
+    type: object
+  model.ExecuteResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  model.FAQ:
+    properties:
+      answer:
+        example: 请参考文档
+        type: string
+      id:
+        example: 1
+        type: integer
+      plugin_id:
+        example: 1
+        type: integer
+      question:
+        example: 如何使用？
+        type: string
+    required:
+    - answer
+    - question
+    type: object
+  model.GenerateVerificationRequest:
+    properties:
+      purpose:
+        type: string
+      target:
+        type: string
+      type:
+        type: string
+    required:
+    - target
+    - type
+    type: object
+  model.GetPluginResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.PluginItem'
+      msg:
+        type: string
+    type: object
+  model.ListPluginsResponse:
+    properties:
+      page:
+        example: 1
+        type: integer
+      plugins:
+        items:
+          $ref: '#/definitions/model.Plugin'
+        type: array
+      size:
+        example: 20
+        type: integer
+      total:
+        example: 100
+        type: integer
+    type: object
+  model.MarketCategory:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  model.MarketCategoryListResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.MarketCategory'
+        type: array
+      msg:
+        type: string
+    type: object
+  model.MarketPluginComment:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      type:
+        type: string
+      user:
+        type: string
+    type: object
+  model.MarketPluginCommentListResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.MarketPluginComment'
+        type: array
+      msg:
+        type: string
+    type: object
+  model.MarketPluginDetailResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/model.MarketPluginItem'
+      msg:
+        type: string
+    type: object
+  model.MarketPluginItem:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      developer:
+        type: string
+      id:
+        type: string
+      installed:
+        type: boolean
+      name:
+        type: string
+      score:
+        type: number
+      tags:
+        items:
+          type: string
+        type: array
+      version:
+        type: string
+    type: object
+  model.MarketPluginListResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        properties:
+          items:
+            items:
+              $ref: '#/definitions/model.MarketPluginItem'
+            type: array
+          total:
+            type: integer
+        type: object
+      msg:
+        type: string
+    type: object
+  model.MarketTag:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  model.MarketTagListResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/model.MarketTag'
+        type: array
+      msg:
+        type: string
+    type: object
+  model.OAuthAccount:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      provider:
+        type: string
+      provider_user_id:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - provider
+    - provider_user_id
+    - user_id
+    type: object
+  model.Permission:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.Plugin:
+    properties:
+      config:
+        description: JSON 字符串
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      version:
+        type: string
+    type: object
+  model.PluginCard:
+    properties:
+      batch_id:
+        description: 关联批次ID
+        type: integer
+      bind_client:
+        description: 绑定客户ID
+        type: integer
+      bind_server:
+        description: 绑定服务器ID
+        type: string
+      channel:
+        description: 销售/分发渠道
+        type: string
+      code:
+        description: 卡密内容
+        type: string
+      created_at:
+        type: string
+      ext:
+        description: 原为json.RawMessage，文档生成用string
+        example: '{}'
+        type: string
+      format:
+        description: 卡密格式/规则描述
+        type: string
+      group_tag:
+        description: 分组/标签
+        type: string
+      id:
+        description: 主键
+        type: integer
+      is_deleted:
+        description: 0=正常，1=已删除
+        type: integer
+      last_op_user:
+        type: integer
+      last_used_at:
+        description: 最后一次使用时间
+        type: string
+      locked_at:
+        type: string
+      max_uses:
+        description: 最大可用次数
+        type: integer
+      order_id:
+        description: 关联订单号
+        type: string
+      plugin_type:
+        description: 适用插件类型/万能卡密
+        type: string
+      prefix:
+        description: 卡密前缀/批次
+        type: string
+      revoke_reason:
+        description: 作废/锁定原因
+        type: string
+      status:
+        description: 0=未用，1=已用，2=作废，3=锁定
+        type: integer
+      unlocked_at:
+        type: string
+      used_at:
+        description: 首次使用时间
+        type: string
+      used_count:
+        description: 已用次数
+        type: integer
+      valid_period:
+        description: 有效期（天）
+        type: integer
+      valid_until:
+        description: 有效期
+        type: string
+    type: object
+  model.PluginCardBatch:
+    properties:
+      create_time:
+        type: string
+      creator:
+        type: integer
+      desc:
+        type: string
+      ext:
+        description: 原为json.RawMessage，文档生成用string
+        example: '{}'
+        type: string
+      id:
+        type: integer
+      is_deleted:
+        type: integer
+      name:
+        type: string
+      prefix:
+        type: string
+    type: object
+  model.PluginComment:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_deleted:
+        type: integer
+      like_count:
+        type: integer
+      parent_id:
+        type: integer
+      plugin_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  model.PluginDependency:
+    properties:
+      dep_name:
+        type: string
+      dep_type:
+        type: string
+      dep_version:
+        description: 用于 swagger 注释和接口文档
+        type: string
+      id:
+        type: integer
+      plugin_id:
+        type: integer
+    type: object
+  model.PluginEventSubscription:
+    properties:
+      event:
+        example: onInstall
+        type: string
+      id:
+        example: 1
+        type: integer
+      plugin_id:
+        example: 1
+        type: integer
+      url:
+        example: https://example.com/callback
+        type: string
+    type: object
+  model.PluginItem:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      developer:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      version:
+        type: string
+    type: object
+  model.PluginListResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/model.Plugin'
+        type: array
+      total:
+        type: integer
+    type: object
+  model.PluginLogListResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          type: string
+        type: array
+      msg:
+        type: string
+    type: object
+  model.PluginStatItem:
+    properties:
+      count:
+        example: 1000
+        type: integer
+      name:
+        example: AI助手
+        type: string
+      plugin_id:
+        example: 1
+        type: integer
+    type: object
+  model.PluginStatsResponse:
+    properties:
+      points:
+        items:
+          $ref: '#/definitions/model.StatsPoint'
+        type: array
+      range:
+        example: 7d
+        type: string
+      type:
+        example: install
+        type: string
+    type: object
+  model.PluginStatusResponse:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: string
+      status:
+        type: string
+    type: object
+  model.PluginsOverviewResponse:
+    properties:
+      active:
+        example: 80
+        type: integer
+      inactive:
+        example: 20
+        type: integer
+      pending:
+        example: 5
+        type: integer
+      rejected:
+        example: 2
+        type: integer
+      top_active:
+        items:
+          $ref: '#/definitions/model.PluginStatItem'
+        type: array
+      top_installs:
+        items:
+          $ref: '#/definitions/model.PluginStatItem'
+        type: array
+      total:
+        example: 100
+        type: integer
+    type: object
+  model.RateRequest:
+    properties:
+      comment:
+        type: string
+      score:
+        type: integer
+    required:
+    - score
+    type: object
+  model.Role:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: boolean
+      updated_at:
+        type: string
+    type: object
+  model.RoleCreateRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  model.RoleUpdateStatusRequest:
+    properties:
+      status:
+        type: integer
+    type: object
+  model.SendPendingRequest:
+    properties:
+      limit:
+        type: integer
+    type: object
+  model.StatsPoint:
+    properties:
+      date:
+        example: "2024-05-20"
+        type: string
+      value:
+        example: 123
+        type: integer
+    type: object
+  model.Tag:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: AI
+        type: string
+    required:
+    - name
+    type: object
+  model.UnreadCountResponse:
+    properties:
+      unread_count:
+        type: integer
+    type: object
+  model.User:
+    properties:
+      created_at:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      status:
+        type: integer
+      updated_at:
+        type: integer
+      username:
+        type: string
+    type: object
+  model.UserCreateRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  model.UserDeleteResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  model.UserListResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/model.User'
+        type: array
+      total:
+        type: integer
+    type: object
+  model.UserOverviewStatsResponse:
+    properties:
+      dailyActiveUsers:
+        type: integer
+      newUsersToday:
+        type: integer
+      onlineUsers:
+        type: integer
+      totalUsers:
+        type: integer
+    type: object
+  model.UserRegistrationTrend:
+    properties:
+      date:
+        type: string
+      registeredUsers:
+        type: integer
+    type: object
+  model.UserRoleDistribution:
+    properties:
+      count:
+        type: integer
+      role:
+        type: string
+    type: object
+  model.UserStatusDistribution:
+    properties:
+      count:
+        type: integer
+      status:
+        type: string
+    type: object
+  model.UserUpdateRequest:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    type: object
+  model.VerificationCode:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      expired_at:
+        type: string
+      id:
+        type: integer
+      target:
+        description: 目标地址：邮箱/手机号
+        type: string
+      type:
+        description: 验证码类型：email/phone
+        type: string
+      used:
+        type: boolean
+      user_id:
+        type: integer
+    type: object
+  model.VerifyCodeRequest:
+    properties:
+      code:
+        type: string
+      target:
+        type: string
+      type:
+        type: string
+    required:
+    - code
+    - target
+    - type
+    type: object
+  repository.PluginDependency:
+    properties:
+      dep_name:
+        type: string
+      dep_type:
+        type: string
+      dep_version:
+        type: string
+      id:
+        type: integer
+      plugin_id:
+        type: integer
+    type: object
+  repository.PluginLog:
+    properties:
+      action:
+        type: string
+      created:
+        type: integer
+      created_at:
+        type: string
+      detail:
+        type: string
+      id:
+        type: integer
+      operator:
+        type: string
+      operator_id:
+        type: integer
+      operator_role:
+        type: string
+      plugin_id:
+        type: integer
+    type: object
+  repository.PluginRating:
+    properties:
+      comment:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      plugin_id:
+        type: integer
+      score:
+        description: 1-5分
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  repository.PluginReview:
+    properties:
+      created_at:
+        type: integer
+      id:
+        type: integer
+      plugin_id:
+        type: integer
+      remark:
+        type: string
+      reviewer:
+        type: integer
+      status:
+        description: pending/approved/rejected
+        type: string
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+      msg:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 基于Gin的后端API服务，支持用户认证、JWT等功能。
+  title: Go Backend API系统
+  version: "1.0"
+paths:
+  /api/v1/auth/forgot_password:
+    post:
+      consumes:
+      - application/json
+      description: 发送验证码到邮箱
+      parameters:
+      - description: 找回密码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ForgotPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 验证码已发送
+          schema:
+            $ref: '#/definitions/auth.ForgotPasswordResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: 找回密码
+      tags:
+      - 认证
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录并获取token
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            $ref: '#/definitions/auth.LoginResponse'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "401":
+          description: 用户名或密码错误
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: 用户登录接口
+      tags:
+      - 认证
+  /api/v1/auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: 用户登出并清除token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登出成功
+          schema:
+            $ref: '#/definitions/auth.LogoutResponse'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "500":
+          description: 登出失败
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户登出接口
+      tags:
+      - 认证
+  /api/v1/auth/profile:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户信息
+          schema:
+            $ref: '#/definitions/auth.ProfileResponse'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户信息
+      tags:
+      - 认证
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: 刷新用户token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token刷新成功
+          schema:
+            $ref: '#/definitions/auth.RefreshTokenResponse'
+        "401":
+          description: token刷新失败
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 刷新token接口
+      tags:
+      - 认证
+  /api/v1/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: 新用户注册
+      parameters:
+      - description: 注册请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 注册成功
+          schema:
+            $ref: '#/definitions/auth.RegisterResponse'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+        "500":
+          description: 注册失败
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: 用户注册接口
+      tags:
+      - 认证
+  /api/v1/auth/reset_password:
+    post:
+      consumes:
+      - application/json
+      description: 校验验证码并重置密码
+      parameters:
+      - description: 重置密码请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.ResetPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 重置成功
+          schema:
+            $ref: '#/definitions/auth.ResetPasswordResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/auth.ErrorResponse'
+      summary: 重置密码
+      tags:
+      - 认证
+  /api/v1/comments/{id}:
+    delete:
+      description: 删除指定评论
+      parameters:
+      - description: 评论ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除评论
+      tags:
+      - 插件评论
+  /api/v1/comments/{id}/like:
+    post:
+      description: 点赞指定评论
+      parameters:
+      - description: 评论ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 点赞评论
+      tags:
+      - 插件评论
+  /api/v1/developers:
+    get:
+      parameters:
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 开发者列表
+      tags:
+      - 开发者
+  /api/v1/developers/{id}:
+    get:
+      parameters:
+      - description: 开发者ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 开发者详情
+      tags:
+      - 开发者
+  /api/v1/developers/{id}/permissions:
+    post:
+      parameters:
+      - description: 开发者ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 权限列表
+        in: body
+        name: perms
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 权限分配
+      tags:
+      - 开发者
+  /api/v1/developers/{id}/plugins:
+    get:
+      parameters:
+      - description: 开发者ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 开发者提交记录
+      tags:
+      - 开发者
+  /api/v1/developers/{id}/verify:
+    post:
+      parameters:
+      - description: 开发者ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 开发者认证
+      tags:
+      - 开发者
+  /api/v1/developers/{id}/violations:
+    get:
+      parameters:
+      - description: 开发者ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 违规记录
+      tags:
+      - 开发者
+  /api/v1/marketplace/categories:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MarketCategoryListResponse'
+      summary: 获取插件分类
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins:
+    get:
+      consumes:
+      - application/json
+      description: 用户/开发者可用，支持筛选、分页
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MarketPluginListResponse'
+      summary: 获取市场插件列表
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MarketPluginDetailResponse'
+      summary: 获取市场插件详情
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/audit:
+    post:
+      consumes:
+      - application/json
+      description: 审核市场插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 审核参数
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 审核市场插件
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/comment:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 评论内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse'
+      summary: 评论
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/comments:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MarketPluginCommentListResponse'
+      summary: 获取插件评论
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/install:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse'
+      summary: 安装市场插件
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/rate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 评分内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.RateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse'
+      summary: 评分
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/remove:
+    delete:
+      description: 管理员移除市场插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 插件不存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 移除市场插件
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/stats:
+    get:
+      description: 获取市场插件统计信息
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取市场插件统计
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/uninstall:
+    delete:
+      description: 卸载已安装的市场插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 卸载市场插件
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/{id}/update:
+    put:
+      consumes:
+      - application/json
+      description: 更新市场插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新参数
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 更新市场插件
+      tags:
+      - 插件市场
+  /api/v1/marketplace/plugins/search:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 分类
+        in: query
+        name: category
+        type: string
+      - description: 标签
+        in: query
+        name: tag
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MarketPluginListResponse'
+      summary: 搜索市场插件
+      tags:
+      - 插件市场
+  /api/v1/marketplace/tags:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MarketTagListResponse'
+      summary: 获取插件标签
+      tags:
+      - 插件市场
+  /api/v1/notifications:
+    post:
+      consumes:
+      - application/json
+      description: 创建一条邮件通知记录
+      parameters:
+      - description: 邮件通知信息
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/model.EmailNotification'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.EmailNotification'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建邮件通知
+      tags:
+      - 邮件通知
+  /api/v1/notifications/send:
+    post:
+      consumes:
+      - application/json
+      description: 批量发送待发送的邮件通知
+      parameters:
+      - description: 发送数量限制
+        in: body
+        name: req
+        schema:
+          $ref: '#/definitions/model.SendPendingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 发送待发送的邮件通知
+      tags:
+      - 邮件通知
+  /api/v1/notifications/user/{userID}:
+    get:
+      description: 查询指定用户的邮件通知列表
+      parameters:
+      - description: 用户ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      - description: 数量
+        in: query
+        name: limit
+        type: integer
+      - description: 偏移
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.EmailNotification'
+            type: array
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询用户邮件通知
+      tags:
+      - 邮件通知
+  /api/v1/notifications/user/{userID}/unread_count:
+    get:
+      description: 查询指定用户的未读邮件通知数量
+      parameters:
+      - description: 用户ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UnreadCountResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询用户未读邮件通知数量
+      tags:
+      - 邮件通知
+  /api/v1/oauth/accounts:
+    post:
+      consumes:
+      - application/json
+      description: 绑定第三方账号到用户
+      parameters:
+      - description: 第三方账号信息
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/model.OAuthAccount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OAuthAccount'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 创建第三方账号关联
+      tags:
+      - 第三方登录
+  /api/v1/oauth/accounts/{id}:
+    delete:
+      description: 解绑第三方账号
+      parameters:
+      - description: 账号ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除第三方账号关联
+      tags:
+      - 第三方登录
+  /api/v1/oauth/accounts/{provider}/{providerUserID}:
+    get:
+      description: 根据provider和providerUserID查询第三方账号
+      parameters:
+      - description: 第三方提供商
+        in: path
+        name: provider
+        required: true
+        type: string
+      - description: 第三方用户ID
+        in: path
+        name: providerUserID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.OAuthAccount'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 查询第三方账号
+      tags:
+      - 第三方登录
+  /api/v1/oauth/accounts/user/{userID}:
+    get:
+      description: 查询指定用户的所有第三方账号
+      parameters:
+      - description: 用户ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.OAuthAccount'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 查询用户的所有第三方账号
+      tags:
+      - 第三方登录
+  /api/v1/permissions:
+    get:
+      description: 获取所有权限
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Permission'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取权限列表
+      tags:
+      - 角色与权限管理
+    post:
+      consumes:
+      - application/json
+      description: 创建新权限
+      parameters:
+      - description: 权限信息
+        in: body
+        name: permission
+        required: true
+        schema:
+          $ref: '#/definitions/model.Permission'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Permission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 创建权限
+      tags:
+      - 角色与权限管理
+  /api/v1/permissions/{id}:
+    delete:
+      description: 删除指定权限
+      parameters:
+      - description: 权限ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除权限
+      tags:
+      - 角色与权限管理
+    get:
+      description: 根据ID获取权限
+      parameters:
+      - description: 权限ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Permission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取权限
+      tags:
+      - 角色与权限管理
+    put:
+      consumes:
+      - application/json
+      description: 更新权限信息
+      parameters:
+      - description: 权限ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 权限信息
+        in: body
+        name: permission
+        required: true
+        schema:
+          $ref: '#/definitions/model.Permission'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Permission'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 更新权限
+      tags:
+      - 角色与权限管理
+  /api/v1/plugin-batches:
+    get:
+      description: 获取所有插件批次的列表
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件批次列表
+      tags:
+      - 插件管理
+    post:
+      consumes:
+      - application/json
+      description: 新增一个插件卡密批次
+      parameters:
+      - description: 请求体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateBatchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增批次
+      tags:
+      - 插件管理
+  /api/v1/plugin-batches/{id}:
+    delete:
+      description: 删除指定插件卡密批次
+      parameters:
+      - description: 批次ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除批次
+      tags:
+      - 插件管理
+    get:
+      description: 获取指定批次的详细信息
+      parameters:
+      - description: 批次ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PluginCardBatch'
+        "404":
+          description: 批次不存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取批次详情
+      tags:
+      - 插件管理
+  /api/v1/plugin-batches/{id}/cards:
+    get:
+      description: 获取指定批次下的插件卡密列表
+      parameters:
+      - description: 批次ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取批次下卡密列表
+      tags:
+      - 插件管理
+  /api/v1/plugin-batches/{id}/stat:
+    get:
+      description: 获取指定批次的卡密统计信息
+      parameters:
+      - description: 批次ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取批次统计
+      tags:
+      - 插件管理
+  /api/v1/plugin-cards:
+    get:
+      consumes:
+      - application/json
+      description: 分页查询插件卡密，可按类型、状态筛选
+      parameters:
+      - description: 插件类型
+        in: query
+        name: plugin_type
+        type: string
+      - description: 卡密状态
+        in: query
+        name: status
+        type: string
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.ListCardsResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 查询卡密列表
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/{id}:
+    get:
+      description: 获取指定卡密的详细信息
+      parameters:
+      - description: 卡密ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PluginCard'
+        "404":
+          description: 卡密不存在
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取卡密详情
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/{id}/bind-records:
+    get:
+      parameters:
+      - description: 卡密ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 获取卡密绑定记录
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/{id}/lock:
+    post:
+      consumes:
+      - application/json
+      description: 锁定指定 ID 的插件卡密，需传锁定原因
+      parameters:
+      - description: 卡密ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 请求体
+        in: body
+        name: data
+        schema:
+          $ref: '#/definitions/handler.ReasonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 锁定卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/{id}/logs:
+    get:
+      parameters:
+      - description: 卡密ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 获取卡密操作日志
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/{id}/revoke:
+    post:
+      consumes:
+      - application/json
+      description: 作废指定 ID 的插件卡密，需传作废原因
+      parameters:
+      - description: 卡密ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 请求体
+        in: body
+        name: data
+        schema:
+          $ref: '#/definitions/handler.ReasonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 作废卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/{id}/unlock:
+    post:
+      consumes:
+      - application/json
+      description: 解锁指定 ID 的插件卡密，需传解锁原因
+      parameters:
+      - description: 卡密ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 请求体
+        in: body
+        name: data
+        schema:
+          $ref: '#/definitions/handler.ReasonRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 解锁卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/batch-lock:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 请求体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.BatchCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 批量锁定卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/batch-unlock:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 请求体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.BatchCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 批量解锁卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/batch/revoke:
+    post:
+      consumes:
+      - application/json
+      description: 批量作废指定 ID 的插件卡密
+      parameters:
+      - description: 请求体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.BatchCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.SuccessResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量作废卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/bind-records:
+    get:
+      description: 分页获取插件卡密的绑定记录
+      parameters:
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ListBindRecordsResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取插件卡密绑定记录
+      tags:
+      - 插件管理
+  /api/v1/plugin-cards/export:
+    get:
+      description: 导出插件卡密为文件
+      parameters:
+      - description: 插件类型
+        in: query
+        name: plugin_type
+        type: string
+      - description: 卡密状态
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: 导出文件
+          schema:
+            type: file
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 导出卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/generate:
+    post:
+      consumes:
+      - application/json
+      description: 批量生成指定类型的插件卡密，可指定有效期、前缀、分组、批次等
+      parameters:
+      - description: 请求体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.GenerateCardsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.GenerateCardsResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 生成插件卡密
+      tags:
+      - PluginCard
+  /api/v1/plugin-cards/verify:
+    post:
+      consumes:
+      - application/json
+      description: 校验卡密有效性并激活，绑定服务器与账号
+      parameters:
+      - description: 请求体
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.VerifyCardRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/handler.VerifyCardResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "403":
+          description: 无权限/校验失败
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: 校验/激活卡密
+      tags:
+      - PluginCard
+  /api/v1/plugins:
+    delete:
+      consumes:
+      - application/json
+      description: 根据ID列表批量删除插件
+      parameters:
+      - description: 插件ID列表
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.BatchDeletePluginsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.EditPluginResponse'
+      summary: 批量删除插件
+      tags:
+      - 插件管理
+    get:
+      consumes:
+      - application/json
+      description: 分页获取插件列表
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PluginListResponse'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取插件列表
+      tags:
+      - 插件管理
+    post:
+      consumes:
+      - application/json
+      description: 安装一个新插件。仅管理员可用。
+      parameters:
+      - description: 插件信息
+        in: body
+        name: plugin
+        required: true
+        schema:
+          $ref: '#/definitions/model.Plugin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Plugin'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 安装插件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}:
+    delete:
+      description: 删除指定插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除插件
+      tags:
+      - 插件管理
+    get:
+      consumes:
+      - application/json
+      description: 获取指定插件的详细信息
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Plugin'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取插件详情
+      tags:
+      - 插件管理
+    put:
+      consumes:
+      - application/json
+      description: 修改插件信息
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 插件信息
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.EditPluginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.EditPluginResponse'
+      summary: 编辑插件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/alerts:
+    get:
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 级别
+        enum:
+        - info
+        - warn
+        - error
+        in: query
+        name: level
+        type: string
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 插件异常告警
+      tags:
+      - 插件监控
+  /api/v1/plugins/{id}/audit-logs:
+    get:
+      description: 获取指定插件的安全审计日志
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: object
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取插件安全审计日志
+      tags:
+      - 插件安全
+  /api/v1/plugins/{id}/comments:
+    get:
+      description: 获取指定插件的评论列表
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取评论列表
+      tags:
+      - 插件评论
+    post:
+      consumes:
+      - application/json
+      description: 新增一条插件评论
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 评论内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.PluginComment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 发表评论
+      tags:
+      - 插件评论
+  /api/v1/plugins/{id}/config:
+    get:
+      description: 获取指定插件的配置信息
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 获取插件配置
+      tags:
+      - 插件配置
+    put:
+      consumes:
+      - application/json
+      description: 更新指定插件的配置信息
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 配置内容
+        in: body
+        name: config
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 更新插件配置
+      tags:
+      - 插件配置
+  /api/v1/plugins/{id}/dependencies:
+    get:
+      description: 获取指定插件的依赖列表
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.PluginDependency'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取插件依赖列表
+      tags:
+      - 插件依赖
+    post:
+      consumes:
+      - application/json
+      description: 为插件添加依赖
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 依赖信息
+        in: body
+        name: dependency
+        required: true
+        schema:
+          $ref: '#/definitions/model.PluginDependency'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 添加插件依赖
+      tags:
+      - 插件依赖
+  /api/v1/plugins/{id}/dependencies/{dep_id}:
+    delete:
+      description: 删除指定插件的依赖
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 依赖ID
+        in: path
+        name: dep_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除插件依赖
+      tags:
+      - 插件依赖
+  /api/v1/plugins/{id}/disable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse'
+      summary: 禁用插件
+      tags:
+      - 插件运行时
+  /api/v1/plugins/{id}/enable:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CommonResponse'
+      summary: 启用插件
+      tags:
+      - 插件运行时
+  /api/v1/plugins/{id}/execute:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 执行参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.ExecuteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ExecuteResponse'
+      summary: 执行插件
+      tags:
+      - 插件运行时
+  /api/v1/plugins/{id}/execute-cmd:
+    post:
+      consumes:
+      - application/json
+      description: 通过命令行适配器执行多语言插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 执行参数
+        in: body
+        name: params
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 多语言插件命令行适配器执行
+      tags:
+      - 多语言插件
+  /api/v1/plugins/{id}/execute-http:
+    post:
+      consumes:
+      - application/json
+      description: 通过HTTP适配器执行多语言插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 执行参数
+        in: body
+        name: params
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 多语言插件HTTP适配器执行
+      tags:
+      - 多语言插件
+  /api/v1/plugins/{id}/faq:
+    get:
+      description: 获取指定插件的常见问题列表
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件FAQ
+      tags:
+      - 插件管理
+    post:
+      consumes:
+      - application/json
+      description: 新增指定插件的常见问题
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: FAQ内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.FAQ'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增插件FAQ
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/featured:
+    post:
+      description: 将指定插件标记为精选
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 精选失败
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 精选插件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/logs:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PluginLogListResponse'
+      summary: 获取插件日志
+      tags:
+      - 插件运行时
+    post:
+      consumes:
+      - application/json
+      description: 写入一条插件操作日志
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 日志内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/repository.PluginLog'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 写入结果
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 写入插件操作日志
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/ratings:
+    get:
+      description: 获取指定插件的所有评分
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件评分列表
+      tags:
+      - 插件管理
+    post:
+      consumes:
+      - application/json
+      description: 新增指定插件的评分
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 评分内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/repository.PluginRating'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增插件评分
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/recommend:
+    post:
+      description: 将指定插件标记为推荐
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 推荐失败
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 推荐插件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/review:
+    get:
+      description: 获取指定插件的审核详情和历史记录
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "404":
+          description: 插件不存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 审核详情/历史
+      tags:
+      - 插件审核
+    post:
+      consumes:
+      - application/json
+      description: 对插件进行审核（通过/驳回），需审核员权限
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 审核内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/repository.PluginReview'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 审核结果
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 插件不存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 审核操作
+      tags:
+      - 插件审核
+  /api/v1/plugins/{id}/sandbox-execute:
+    post:
+      consumes:
+      - application/json
+      description: 在沙箱环境中执行插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 执行参数
+        in: body
+        name: params
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 插件沙箱执行
+      tags:
+      - 插件安全
+  /api/v1/plugins/{id}/security-scan:
+    post:
+      description: 对指定插件进行安全扫描
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 插件安全扫描
+      tags:
+      - 插件安全
+  /api/v1/plugins/{id}/stats:
+    get:
+      description: 获取插件安装量、活跃量、调用量、异常量等趋势数据
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 类型
+        enum:
+        - install
+        - active
+        - call
+        - exception
+        in: query
+        name: type
+        required: true
+        type: string
+      - description: 时间范围
+        example: 7d
+        in: query
+        name: range
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 插件趋势数据
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/stats/detail:
+    get:
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 类型
+        enum:
+        - install
+        - active
+        - call
+        - exception
+        in: query
+        name: type
+        required: true
+        type: string
+      - description: 开始时间
+        in: query
+        name: start
+        type: string
+      - description: 结束时间
+        in: query
+        name: end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 插件多维统计
+      tags:
+      - 插件监控
+  /api/v1/plugins/{id}/status:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PluginStatusResponse'
+      summary: 获取插件运行状态
+      tags:
+      - 插件运行时
+  /api/v1/plugins/{id}/subscribe:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 订阅内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.PluginEventSubscription'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 订阅插件事件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/top:
+    post:
+      description: 将指定插件置顶
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 置顶失败
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 置顶插件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/uninstall:
+    post:
+      description: 卸载指定插件
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 卸载插件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/unsubscribe:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 订阅内容
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.PluginEventSubscription'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 取消订阅插件事件
+      tags:
+      - 插件管理
+  /api/v1/plugins/{id}/versions:
+    get:
+      description: 获取指定插件的版本历史列表
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件版本历史
+      tags:
+      - 插件版本
+  /api/v1/plugins/{id}/versions/force-upgrade:
+    post:
+      description: 强制将插件升级到指定版本
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 升级到的版本ID
+        in: body
+        name: version_id
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 强制升级
+      tags:
+      - 插件版本
+  /api/v1/plugins/{id}/versions/rollback:
+    post:
+      description: 回滚插件到指定历史版本
+      parameters:
+      - description: 插件ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 回滚到的版本ID
+        in: body
+        name: version_id
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 版本回滚
+      tags:
+      - 插件版本
+  /api/v1/plugins/batch-action:
+    post:
+      consumes:
+      - application/json
+      description: 批量上架/下架/删除/审核插件。仅管理员可用。action 支持 enable/disable/remove/audit。
+      parameters:
+      - description: 批量操作参数，示例：{\
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.BatchPluginActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/handler.BatchPluginActionResult'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 插件批量操作
+      tags:
+      - 插件管理
+  /api/v1/plugins/categories:
+    get:
+      description: 获取所有插件分类
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件分类列表
+      tags:
+      - 插件管理
+    post:
+      consumes:
+      - application/json
+      description: 新增一个插件分类
+      parameters:
+      - description: 分类名
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增插件分类
+      tags:
+      - 插件管理
+  /api/v1/plugins/categories/{id}:
+    delete:
+      description: 删除指定插件分类
+      parameters:
+      - description: 分类ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除插件分类
+      tags:
+      - 插件管理
+  /api/v1/plugins/change-status:
+    post:
+      consumes:
+      - application/json
+      description: 单独上架、下架、禁用、启用插件。仅管理员可用。
+      parameters:
+      - description: 状态变更参数，示例：{\
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.PluginStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: 权限不足
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务异常
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 插件状态变更
+      tags:
+      - 插件管理
+  /api/v1/plugins/export:
+    get:
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+      summary: 导出插件数据
+      tags:
+      - 插件管理
+  /api/v1/plugins/import:
+    post:
+      consumes:
+      - application/octet-stream
+      parameters:
+      - description: 导入文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 导入插件数据
+      tags:
+      - 插件管理
+  /api/v1/plugins/overview:
+    get:
+      description: 获取插件总数、各状态数量、活跃度、排行等
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 插件全局统计
+      tags:
+      - 插件管理
+  /api/v1/plugins/review:
+    get:
+      description: 获取待审核插件的分页列表
+      parameters:
+      - description: 偏移量
+        in: query
+        name: offset
+        type: integer
+      - description: 每页数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 待审核插件列表
+      tags:
+      - 插件审核
+  /api/v1/plugins/stats:
+    get:
+      description: 获取插件安装量、活跃量、调用量、异常量等趋势数据
+      parameters:
+      - description: 插件ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 统计类型
+        in: query
+        name: type
+        required: true
+        type: string
+      - description: 时间范围
+        in: query
+        name: range
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.PluginStatsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件趋势统计
+      tags:
+      - 插件管理
+  /api/v1/plugins/tags:
+    get:
+      description: 获取所有插件标签
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取插件标签列表
+      tags:
+      - 插件管理
+    post:
+      consumes:
+      - application/json
+      description: 新增一个插件标签
+      parameters:
+      - description: 标签名
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.Tag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 新增插件标签
+      tags:
+      - 插件管理
+  /api/v1/plugins/tags/{id}:
+    delete:
+      description: 删除指定插件标签
+      parameters:
+      - description: 标签ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除插件标签
+      tags:
+      - 插件管理
+  /api/v1/plugins/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 插件包
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 插件包上传
+      tags:
+      - 插件管理
+  /api/v1/plugins/validate:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 插件包
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: 插件包校验
+      tags:
+      - 插件管理
+  /api/v1/plugins/versions/{version_id}/disable:
+    post:
+      description: 禁用指定插件版本
+      parameters:
+      - description: 版本ID
+        in: path
+        name: version_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 禁用版本
+      tags:
+      - 插件版本
+  /api/v1/points/balance:
+    get:
+      description: 查询指定用户的当前积分余额
+      parameters:
+      - description: 用户ID
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 查询用户积分余额
+      tags:
+      - 积分
+  /api/v1/points/change:
+    post:
+      consumes:
+      - application/json
+      description: 对指定用户进行积分增加或扣减
+      parameters:
+      - description: 积分变动参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.ChangePointsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 积分增加/扣减
+      tags:
+      - 积分
+  /api/v1/points/records:
+    get:
+      description: 分页查询指定用户或所有用户的积分变动明细
+      parameters:
+      - description: 用户ID（可选，不传查全量）
+        in: query
+        name: user_id
+        type: integer
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 查询用户积分明细
+      tags:
+      - 积分
+  /api/v1/points/trend:
+    get:
+      description: 返回一段时间内每日积分变动趋势
+      parameters:
+      - description: 起始日期(yyyy-mm-dd)
+        in: query
+        name: start_date
+        type: string
+      - description: 结束日期(yyyy-mm-dd)
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 获取积分趋势数据
+      tags:
+      - 积分
+  /api/v1/roles:
+    get:
+      description: 获取所有角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Role'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取角色列表
+      tags:
+      - 角色与权限管理
+    post:
+      consumes:
+      - application/json
+      description: 创建新角色
+      parameters:
+      - description: 创建角色请求体
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoleCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Role'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 创建角色
+      tags:
+      - 角色与权限管理
+  /api/v1/roles/{id}:
+    delete:
+      description: 删除指定角色
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除角色
+      tags:
+      - 角色与权限管理
+    get:
+      description: 根据ID获取角色
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Role'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取角色
+      tags:
+      - 角色与权限管理
+    put:
+      consumes:
+      - application/json
+      description: 根据角色ID更新角色的状态
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 新的角色状态
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoleUpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新后的角色信息
+          schema:
+            $ref: '#/definitions/model.Role'
+        "400":
+          description: 无效请求或无效的角色ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 角色不存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 更新角色状态
+      tags:
+      - 角色与权限管理
+  /api/v1/roles/{id}/permissions:
+    get:
+      description: 获取指定角色的所有权限
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Permission'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取角色的权限列表
+      tags:
+      - 角色与权限管理
+  /api/v1/roles/{id}/permissions/{permissionId}:
+    delete:
+      description: 移除指定角色的权限
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 权限ID
+        in: path
+        name: permissionId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 移除角色的权限
+      tags:
+      - 角色与权限管理
+    post:
+      description: 为指定角色分配权限
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 权限ID
+        in: path
+        name: permissionId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 为角色分配权限
+      tags:
+      - 角色与权限管理
+  /api/v1/roles/{id}/permissions/batch:
+    delete:
+      consumes:
+      - application/json
+      description: 批量移除指定角色的多个权限
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 权限ID数组
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/model.BatchRemovePermissionsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 批量移除角色的权限
+      tags:
+      - 角色与权限管理
+    post:
+      consumes:
+      - application/json
+      description: 批量为指定角色分配多个权限
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 权限ID数组
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/model.BatchAssignPermissionsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 批量为角色分配权限
+      tags:
+      - 角色与权限管理
+  /api/v1/roles/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: 根据角色ID更新角色的状态
+      parameters:
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 新的角色状态
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoleUpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新后的角色信息
+          schema:
+            $ref: '#/definitions/model.Role'
+        "400":
+          description: 无效请求或无效的角色ID
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: 角色不存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 更新角色状态
+      tags:
+      - 角色与权限管理
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: 分页获取用户列表
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 搜索关键字
+        in: query
+        name: search
+        type: string
+      - description: 排序字段，支持 id, username, email, created_at, updated_at
+        in: query
+        name: sort_by
+        type: string
+      - description: 排序顺序，支持 asc, desc
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserListResponse'
+      summary: 获取用户列表
+      tags:
+      - 用户管理
+    post:
+      consumes:
+      - application/json
+      description: 新增用户
+      parameters:
+      - description: 用户信息
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功并返回用户部分信息
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "409":
+          description: 用户名或邮箱已存在
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 新增用户
+      tags:
+      - 用户管理
+  /api/v1/users/{id}:
+    delete:
+      description: 删除指定用户
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserDeleteResponse'
+      summary: 删除用户
+      tags:
+      - 用户管理
+    get:
+      description: 获取指定用户信息
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: 获取用户详情
+      tags:
+      - 用户管理
+    put:
+      consumes:
+      - application/json
+      description: 编辑用户信息
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 用户信息
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 编辑用户
+      tags:
+      - 用户管理
+  /api/v1/users/{id}/permissions:
+    get:
+      description: 获取指定用户的所有权限
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Permission'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取用户的权限列表
+      tags:
+      - 用户角色关联
+  /api/v1/users/{id}/roles:
+    get:
+      description: 获取指定用户的所有角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Role'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 获取用户的角色列表
+      tags:
+      - 用户角色关联
+  /api/v1/users/{id}/roles/{roleId}:
+    delete:
+      description: 移除指定用户的角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 角色ID
+        in: path
+        name: roleId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 移除用户的角色
+      tags:
+      - 用户角色关联
+    post:
+      description: 为指定用户分配角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 角色ID
+        in: path
+        name: roleId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 为用户分配角色
+      tags:
+      - 用户角色关联
+  /api/v1/users/{id}/roles/batch:
+    delete:
+      consumes:
+      - application/json
+      description: 批量移除指定用户的多个角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 角色ID数组
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/model.BatchRemoveRolesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 批量移除用户的角色
+      tags:
+      - 用户角色关联
+    post:
+      consumes:
+      - application/json
+      description: 批量为指定用户分配多个角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 角色ID数组
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/model.BatchAssignRolesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 批量为用户分配角色
+      tags:
+      - 用户角色关联
+  /api/v1/users/overview/active:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.ActiveUser'
+            type: array
+      summary: 获取活跃用户列表
+      tags:
+      - 用户概览
+  /api/v1/users/overview/role-distribution:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.UserRoleDistribution'
+            type: array
+      summary: 获取用户角色分布数据
+      tags:
+      - 用户概览
+  /api/v1/users/overview/stats:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserOverviewStatsResponse'
+      summary: 获取用户概览统计数据
+      tags:
+      - 用户概览
+  /api/v1/users/overview/status-distribution:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.UserStatusDistribution'
+            type: array
+      summary: 获取用户状态分布数据
+      tags:
+      - 用户概览
+  /api/v1/users/overview/trend:
+    get:
+      parameters:
+      - description: 时间范围 (week, month, year)
+        in: query
+        name: timeRange
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.UserRegistrationTrend'
+            type: array
+      summary: 获取用户注册趋势数据
+      tags:
+      - 用户概览
+  /api/v1/verification/expired:
+    delete:
+      description: 删除所有已过期的验证码
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 清理过期验证码
+      tags:
+      - 验证码服务
+  /api/v1/verification/generate:
+    post:
+      consumes:
+      - application/json
+      description: 生成邮箱或手机验证码
+      parameters:
+      - description: 验证码请求
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/model.GenerateVerificationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.VerificationCode'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 生成验证码
+      tags:
+      - 验证码服务
+  /api/v1/verification/verify:
+    post:
+      consumes:
+      - application/json
+      description: 校验邮箱或手机验证码
+      parameters:
+      - description: 验证码校验请求
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/model.VerifyCodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 校验验证码
+      tags:
+      - 验证码服务
+swagger: "2.0"
